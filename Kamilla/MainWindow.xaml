@@ -1,0 +1,56 @@
+﻿<Window x:Class="Kamilla.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:Kamilla"
+        mc:Ignorable="d"
+        Title="Моя супре мега программа" Height="450" Width="1080" Loaded="Window_Loaded" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Century Gothic"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="5 0 10 10 "/>
+        </Style>
+        <local:dbPoliceSuperDataSet x:Key="dbPoliceSuperDataSet"/>
+        <CollectionViewSource x:Key="tbl_monkey_houseViewSource" Source="{Binding tbl_monkey_house, Source={StaticResource dbPoliceSuperDataSet}}"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource tbl_monkey_houseViewSource}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.7*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <StackPanel Margin="15">
+                <TextBlock Text="ФИО: "/>
+                <TextBox x:Name="textBoxFIO" AcceptsReturn="True" Margin="10 0 5 10" FontFamily="Century Gothic" Height="70"/>
+                <TextBlock Text="Домашний адрес: "/>
+                <TextBox x:Name="textBoxAddress" Margin="10 0 5 10" Height="70" AcceptsReturn="True"/>
+                <TextBlock Text="Количество приводов в полицию: "/>
+                <TextBox x:Name="textBoxCountKosyak" Margin="10 0 5 10"/>
+                <TextBlock Text="Дата: "/>
+                <DatePicker x:Name="Date" Margin="10 0 5 10" SelectedDate="{x:Static sys:DateTime.Now}"/>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" Margin="10">
+                <Button x:Name="buttonCreate" Margin="5" Width="100" Content="Добавить" Click="buttonCreate_Click"/>
+                <Button x:Name="buttonEdit" Width="100" Margin="5" Content="Изменить" Click="buttonEdit_Click"/>
+                <Button x:Name="buttonRemove" Width="100" Margin="5" Content="Удалить" Click="buttonRemove_Click"/>
+            </StackPanel>
+        </Grid>
+        <DataGrid x:Name="tbl_monkey_houseDataGrid" AutoGenerateColumns="False" Grid.Column="1" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10" RowDetailsVisibilityMode="VisibleWhenSelected">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="fIOColumn" Binding="{Binding FIO}" Header="ФИО" Width="200"/>
+                <DataGridTextColumn x:Name="addressColumn" Binding="{Binding Address}" Header="Адрес" Width="150"/>
+                <DataGridTextColumn x:Name="misconductsColumn" Binding="{Binding Misconducts}" Header="Проступок" Width="SizeToHeader"/>
+                <DataGridTemplateColumn x:Name="dateColumn" Header="Дата" Width="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding Date, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
